@@ -1,24 +1,50 @@
-************************************************************
+/************************************************************
 *************************************************************
 * File: sobel.cpp
 *
 *
-* ************************************************************
-*
+* ************************************************************/
 #include "sobel.hpp"
+#include <opencv2/opencv.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/core/matx.hpp>
+#include <iostream>
 
-void to442_greyscle(Mat frame){
+using namespace cv;
+
+void to442_greyscale(Mat frame);
+
+int main (int argc, char *argv[]) {
+
+	if (argc != 2) {
+		std::cout << "Missing argument -- include path to file" << std::endl;
+		exit(1);
+	}
+	
+	std::cout << argv[0] << std::endl;
+	
+	return 0;
+
+}
+
+void to442_greyscale(Mat frame) {
         float grey;
-        for(int row=0; row < frame.rows; row++){
-                for(int col=0; col<frame.cols; col++){
-                        Vec3b colors = frame.at<Vec3b>(Point(col,row));
-                        /*BT.709 recommended algorithm*/
-                        grey = color.val[0]*0.0722 + color.val[1]*0.7152 + color.val[2]*0.2126;
-                        color.val[0]=grey;//Blue
-                        color.val[1]=grey;//Green
-                        color.val[2]=grey;//Red
 
-                        frame.at<Vec3b>(Point(col, row)) = color;
+        for(int row=0; row < frame.rows; row++){
+
+                for(int col=0; col<frame.cols; col++){
+
+                        Vec3b colors = frame.at<Vec3b>(Point(col,row));
+			
+                        /*BT.709 recommended algorithm*/
+                        grey = colors.val[0]*0.0722 + colors.val[1]*0.7152 + colors.val[2]*0.2126;
+                        colors.val[0]=grey;//Blue
+                        colors.val[1]=grey;//Green
+                        colors.val[2]=grey;//Red
+
+                        frame.at<Vec3b>(Point(col, row)) = colors;
                 }
         }
 }
@@ -36,4 +62,4 @@ void to442_greyscle(Mat frame){
 //      int col0 = 0;
 //      int row0 = 0;
 
-
+ 
