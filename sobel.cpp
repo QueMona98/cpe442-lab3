@@ -14,22 +14,38 @@
 
 using namespace cv;
 
-void to442_greyscale(Mat frame);
+Mat to442_greyscale(Mat frame);
 
 int main (int argc, char *argv[]) {
 
 	if (argc != 2) {
-		std::cout << "Missing argument -- include path to file" << std::endl;
+		std::cerr << "Missing argument -- include path to file" << std::endl;
 		exit(1);
 	}
-	
-	std::cout << argv[0] << std::endl;
-	
+
+	VideoCapture cap(argv[1]);
+	Mat frame;
+
+	for(;;) {
+
+		cap >> frame;
+
+		if(frame.empty())
+			break;
+
+		frame = to442_greyscale(frame);
+		resize(frame, frame, Size(frame.cols/3, frame.rows/3));
+		namedWindow("Display frame", WINDOW_NORMAL);
+		imshow("Display frame", frame);
+
+		if (waitKey(1) == 27)
+			break;
+	}
 	return 0;
 
 }
 
-void to442_greyscale(Mat frame) {
+Mat to442_greyscale(Mat frame) {
         float grey;
 
         for(int row=0; row < frame.rows; row++){
@@ -47,6 +63,7 @@ void to442_greyscale(Mat frame) {
                         frame.at<Vec3b>(Point(col, row)) = colors;
                 }
         }
+	return frame;
 }
 
 /*Visuals on how to implement the matrices
